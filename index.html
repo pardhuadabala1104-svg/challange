@@ -1,41 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Smart Dustbin Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Placement Dashboard</title>
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f0f2f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background-color: #2c3e50;
+      position: fixed;
+      left: 0;
+      top: 0;
+      padding: 20px 0;
+      color: white;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 20px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 12px 20px;
+      text-decoration: none;
+      color: white;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+      background-color: #34495e;
+    }
+
+    .main {
+      margin-left: 220px;
+      padding: 20px;
     }
 
     header {
-      background-color: #00796b;
-      color: white;
-      padding: 20px;
-      text-align: center;
-      font-size: 28px;
+      background-color: white;
+      padding: 15px 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
     }
 
-    .container {
+    .search-container {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      padding: 40px 20px;
+      flex-wrap: wrap;
     }
 
-    .dustbin-card {
-      background: white;
-      border-radius: 12px;
-      padding: 30px;
-      width: 350px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      text-align: center;
+    .search-container input {
+      padding: 8px 12px;
+      width: 300px;
+      max-width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
 
-    .fill-bar-container {
-      width: 100%;
-      height: 30px;
-      backg
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .card p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    @media (max-width: 600px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      .main {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Placement Portal</h2>
+    <a href="#">Dashboard</a>
+    <a href="#">Companies</a>
+    <a href="#">Colleges</a>
+    <a href="#">Applications</a>
+    <a href="#">Settings</a>
+  </div>
+
+  <div class="main">
+    <header>
+      <div class="search-container">
+        <h2>Companies Attending Placements</h2>
+        <input type="text" id="searchInput" placeholder="Search company...">
+      </div>
+    </header>
+
+    <div class="dashboard" id="companyList">
+      <!-- Company cards will be populated here -->
+    </div>
+  </div>
+
+  <script>
+    const companies = [
+      {
+        name: "Google",
+        role: "Software Engineer",
+        package: "₹40 LPA",
+        colleges: "All IITs, NITs"
+      },
+      {
+        name: "Microsoft",
+        role: "Program Manager",
+        package: "₹35 LPA",
+        colleges: "IITs, IIITs, NIT Trichy"
+      },
+      {
+        name: "Amazon",
+        role: "SDE I",
+        package: "₹30 LPA",
+        colleges: "Top Tier Colleges"
+      },
+      {
+        name: "TCS",
+        role: "System Engineer",
+        package: "₹7 LPA",
+        colleges: "All Colleges"
+      },
+      {
+        name: "Infosys",
+        role: "Operations Executive",
+        package: "₹4 LPA",
+        colleges: "Pan-India"
+      }
+    ];
+
+    function renderCompanies(filter = "") {
+      const container = document.getElementById('companyList');
+      container.innerHTML = "";
+
+      const filtered = companies.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()));
+
+      if (filtered.length === 0) {
+        container.innerHTML = "<p>No companies found.</p>";
+        return;
+      }
+
+      filtered.forEach(company => {
+        const card = document.createElement('div');
+        card.className = "card";
+        card.innerHTML = `
+          <h3>${company.name}</h3>
+          <p><strong>Role:</strong> ${company.role}</p>
+          <p><strong>Package:</strong> ${company.package}</p>
+          <p><strong>Colleges:</strong> ${company.colleges}</p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      renderCompanies(e.target.value);
+    });
+
+    // Initial load
+    renderCompanies();
+  </script>
+
+</body>
+</html>
